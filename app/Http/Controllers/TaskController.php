@@ -10,7 +10,13 @@ class TaskController extends Controller
     // Display a list of existing tasks
     public function index()
     {
-        $tasks = Task::all();
+        // $tasks = Task::all();
+        // return view('tasks.index', ['tasks' => $tasks]);
+        $tasks =  Task::when(request('search'), function ($query) {
+            $query->where('title', 'LIKE', '%' . request('search') . '%')
+                ->orWhere('description', 'LIKE', '%' . request('search') . '%')
+                ->orWhere('status', 'LIKE', '%' . request('search') . '%');
+        })->orderBy('created_at', 'desc')->paginate(8);
         return view('tasks.index', ['tasks' => $tasks]);
     }
 
@@ -68,17 +74,13 @@ class TaskController extends Controller
     // Search for tasks based on title and/or status
     public function search(Request $request)
     {
-        $title = $request->input('title');
-        $status = $request->input('status');
+        $search = $request->input('search');
 
-        $tasks = Task::query()
-            ->when($title, function ($query) use ($title) {
-                $query->where('title', 'like', "%$title%");
-            })
-            ->when($status, function ($query) use ($status) {
-                $query->where('status', $status);
-            })
-            ->get();
+        $tasks = Task::where(function ($query) use ($search) {
+            $query->where('title', 'like', "%$search%")
+                ->orWhere('description', 'like', "%$search%")
+                ->orWhere('status', 'like', "%$search%");
+        })->orderBy('created_at', 'desc')->paginate(8);
 
         return view('tasks.index', ['tasks' => $tasks]);
     }

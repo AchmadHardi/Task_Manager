@@ -7,9 +7,24 @@
 <body>
     <div class="container">
         <h1>List of Tasks</h1>
-
-        <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create New Task</a>
-
+        <form action="" method="get">
+            <div class="input-group mt-3">
+                <input type="text" name="search" value="{{ request('search') }}"
+                    class="form-control bg-light border-0 small" placeholder="Search for..."
+                    aria-label="Search" aria-describedby="basic-addon2" style="max-width: 200px;">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary ml-1" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+                @if (session()->has('message'))
+                    <div class="alert alert-{{ session('alert-info') }} mt-3">
+                        {{ session('message') }}
+                    </div>
+                @endif
+            </div>
+        </form>        
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary mt-3">Create New Task</a>
         <table class="table mt-3">
             <thead>
                 <tr>
