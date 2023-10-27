@@ -31,7 +31,7 @@ Before you begin, ensure you have met the following requirements:
 2. Change to the project directory:
 
     ```shell
-    cd task-management-app
+    cd Task_Manager
     ```
 
 3. Install the project dependencies using Composer:
